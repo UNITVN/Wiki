@@ -25,6 +25,7 @@ app_identifier = "com.unitvn.audioconverter"
 ```
 
 ## For firebase distribution
+### Step 1: Fastlane configuration
 - Add the following lane to Fastfile
 ```ruby 
   lane :firebase do
@@ -60,6 +61,30 @@ app_identifier = "com.unitvn.audioconverter"
 ```sh
 bundle exec fastlane add_plugin firebase_app_distribution
 ```
+### Step 2: Authenticate with Firebase
+#### Use Firebase service account credentials
+- On the [Google Cloud console](https://console.cloud.google.com/projectselector2/iam-admin/serviceaccounts?authuser=0), select your project and create a new service account.
+- Add the **Firebase App Distribution Admin** role
+- Create a private json key and move the key to a location accessible to your build environment. Be sure to keep this file somewhere safe, as it grants administrator access to App Distribution in your Firebase project
+1. Provide or locate your service account credentials:
+    - a. To pass your service account key to your lane's firebase_app_distribution action, set the service_credentials_file parameter with the path to your private key JSON file
+
+    - b. To locate your credentials with ADC, set the environment variable GOOGLE_APPLICATION_CREDENTIALS to the path for the private key JSON file. For example:
+    ```
+     export GOOGLE_APPLICATION_CREDENTIALS=/absolute/path/to/credentials/file.json
+    ```
+#### Sign in using the Firebase CLI
+- install firebase CLI
+```sh 
+curl -sL https://firebase.tools | bash
+```
+- Log into Firebase using your Google account by running the following command:
+
+###### This command connects your local machine to Firebase and grants you access to your Firebase projects.
+```
+firebase login
+```
+### Step 3: Distribute the application
 - Run folowing command to build and upload application to the Firebase distribution:
 ```sh
 bundle exec fastlane firebase
