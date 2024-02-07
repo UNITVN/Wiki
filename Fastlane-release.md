@@ -10,6 +10,10 @@ gem "fastlane"
 - Run `bundle update`
 - Add both the `./Gemfile` and the `./Gemfile.lock` to version control
 
+- Create dir fastlane -> select option is 4 manual
+```sh  
+bundle exec fastlane init
+```
 - add firebase_app_distribution plugin. Type folowing command into `Terminal`:
 ```sh 
 bundle exec fastlane add_plugin versioning
@@ -18,6 +22,11 @@ bundle exec fastlane add_plugin versioning
 ---
 ## 2. Application information
 - in put application information into the top of Fastfile
+
+```sh
+open fastlane/Fastfile 
+```
+
 ```ruby 
 build_number = 2;
 version_number = "1.1";
@@ -30,6 +39,24 @@ app_identifier = "com.unitvn.audioconverter"
 ### For firebase distribution
   1. Config fastlane
       1. Add the following lane to Fastfile
+      ```sh
+      open fastlane/Fastfile 
+      ```
+      ```
+
+      platform :ios do
+        desc "Description of what the lane does"
+        lane :custom_lane do
+          # add actions here: https://docs.fastlane.tools/actions
+        end
+
+
+        <<<include>>>
+
+
+      end
+      ```
+      2. Update provisioningProfiles => app_identifier => your cer
       ```ruby 
       lane :firebase do
         increment_build_number(
@@ -69,6 +96,7 @@ app_identifier = "com.unitvn.audioconverter"
 
   2. Authenticate with Firebase
      - Use Firebase service account credentials
+      > - Add Account access permission to group project 
       > - On the [Google Cloud console](https://console.cloud.google.com/projectselector2/iam-admin/serviceaccounts?authuser=0), select your project and create a new service account.
       > - Add the **Firebase App Distribution Admin** role
       > - Create a private json key and move the key to a location accessible to your build environment. Be sure to keep this file somewhere safe, as it grants administrator access to App Distribution in your Firebase project
