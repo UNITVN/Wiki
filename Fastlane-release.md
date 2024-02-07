@@ -55,6 +55,7 @@ app_identifier = "com.unitvn.audioconverter"
         )
         
         firebase_app_distribution(
+          app: "<your Firebase app ID>",
           groups: "unitmember",
           release_notes: "release"
         )
@@ -64,6 +65,7 @@ app_identifier = "com.unitvn.audioconverter"
       ```
       bundle exec fastlane add_plugin firebase_app_distribution
       ```
+      3. Replace `<your Firebase app ID>` with your firebase app ID. Required only if your app does not contain a Firebase config file (GoogleService-Info.plist): Your app's Firebase App ID. You can find the App ID in the Firebase console, on the [General Settings page](https://console.firebase.google.com/project/_/settings/general/?authuser=0).
 
   2. Authenticate with Firebase
      - Use Firebase service account credentials
