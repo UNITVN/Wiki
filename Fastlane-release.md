@@ -1,4 +1,25 @@
 # Fastlane configuration
+Macos M1 Install ruby = rbenv
+Install rbenv
+# Install rbenv
+```
+brew install rbenv
+rbenv init
+curl -fsSL https://github.com/rbenv/rbenv-installer/raw/main/bin/rbenv-doctor | bash
+
+benv install -l 
+=>> Select lastest version
+
+rbenv install 3.0.3
+
+rbenv global 3.0.3
+
+ruby -v
+
+
+
+
+```
 
 ## 1. Install fastlane
 - Create a ./Gemfile in the root directory of your project with the content:
