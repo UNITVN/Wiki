@@ -15,10 +15,6 @@ rbenv install 3.0.3
 rbenv global 3.0.3
 
 ruby -v
-
-
-
-
 ```
 
 ## 1. Install fastlane
@@ -42,70 +38,46 @@ bundle exec fastlane add_plugin versioning
 ---
 ---
 ## 2. Application information
-- in put application information into the top of Fastfile
-
+- Open Fastfile
 ```sh
 open fastlane/Fastfile 
 ```
+- Add following lines to the top of Fastfile
 
 ```ruby 
-build_number = 2;
-version_number = "1.1";
-scheme = "audio-converter"
-app_identifier = "com.unitvn.audioconverter"
+# Load template
+import_from_git(
+  url: 'git@github.com:UNITVN/default-fastfile.git',
+  path: 'default-fastfile'
+)
+
+# Replace following lines with your own values from project
+ENV["BUILD_NUMBER"] = "1"
+ENV["VERSION_NUMBER"] = "1.1.1"
+ENV["SCHEME_NAME"] = "snap-editor"
+ENV["APP_IDENTIFIER"] = "com.unitvn.photoeditor"
+ENV["FASTLANE_USER"] = "Quangtm193@gmail.com"
+ENV["ADHOC_PROVISIONING_PROFILE"] = "snap-edit-adhoc"
+ENV["APPSTORE_PROVISIONING_PROFILE"] = "snapeditor_appstore"
 ```
 ---
 ---
 ## 3. Release application
 ### For firebase distribution
   1. Config fastlane
-      1. Add the following lane to Fastfile
-      ```sh
-      open fastlane/Fastfile 
+      1. Add the following lane to Fastfile inside `platform :ios do` block: 
       ```
-      ```
-
-      platform :ios do
-        desc "Description of what the lane does"
-        lane :custom_lane do
-          # add actions here: https://docs.fastlane.tools/actions
-        end
-
-
-        <<<include>>>
-
-
-      end
-      ```
-      2. Update provisioningProfiles => app_identifier => your cer
-      ```ruby 
+      desc "Build and upload to firebase"
       lane :firebase do
-        increment_build_number(
-          build_number: build_number
-        )
-        increment_version_number_in_xcodeproj(
-          # specify specific version number (optional, omitting it increments patch version number)
-          version_number: version_number,   
-          # (optional, you must specify the path to your main Xcode project if it is not in the project root directory
-          # or if you have multiple xcodeproj's in the root directory)
-          xcodeproj: scheme + '.xcodeproj',
-          # (optional)
-          target: scheme # or `scheme`
-        )
-        gym(
-          scheme: scheme,
-          export_method: "ad-hoc",
-          export_options: {
-            provisioningProfiles: {
-              app_identifier => "unit-adhoc-all",
-            }
-          }
+        build(
+          export_method: "ad-hoc"
         )
         
         firebase_app_distribution(
-          app: "<your Firebase app ID>",
+          app: "<your Firebase app ID>"
           groups: "unitmember",
-          release_notes: "release"
+          release_notes: "sprint 4",
+          service_credentials_file: "/Users/quang.tranminh/Library/Mobile Documents/com~apple~CloudDocs/unitvnios-8079edc9e94a.json"
         )
       end
       ```
@@ -147,53 +119,34 @@ bundle exec fastlane firebase
 ```
 ---
 ### For appstore distribution
-1. Add the following lane to Fastfile:
+1. Add the following lane to Fastfile inside `platform :ios do` block:
 ```ruby
-  lane :release do
-    # ENV["FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD"] = "your-app-specific-password"
+desc "Build and upload to AppstoreConnect"
+lane :release do
+  ENV["FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD"] = "<APPLICATION_SPECIFIC_PASSWORD>"
 
-    increment_build_number(
-      build_number: build_number
-    )
+  build(
+    export_method: "app-store"
+  )
 
-    increment_version_number_in_xcodeproj(
-      # specify specific version number (optional, omitting it increments patch version number)
-      version_number: version_number,   
-      # (optional, you must specify the path to your main Xcode project if it is not in the project root directory
-      # or if you have multiple xcodeproj's in the root directory)
-      xcodeproj: scheme + '.xcodeproj',
-      # (optional)
-      target: scheme # or `scheme`
-    )
-
-    gym(
-      scheme: scheme,
-      export_method: "app-store",
-      export_options: {
-        provisioningProfiles: {
-          app_identifier => "appstore_provisioning_profile",
-        }
-      }
-    )
-
-    upload_to_app_store(
-      username: "user@email.com",
-      team_name: "UNIT VIET NAM JOINT STOCK COMPANY",
-      force: true,
-      app_version: version_number,
-      app_identifier: app_identifier,
-      submit_for_review: true,
-      run_precheck_before_submit: false,
-      skip_binary_upload: false,
-      skip_screenshots: true,
-      skip_metadata: false,
-      automatic_release: true,
-      submission_information: { 
-        export_compliance_uses_encryption: false,
-        add_id_info_uses_idfa: false 
-      }
-    )
-  end
+  upload_to_app_store(
+    username: ENV["FASTLANE_USER"],
+    team_name: "UNIT VIET NAM JOINT STOCK COMPANY",
+    force: true,
+    app_version: ENV["VERSION_NUMBER"],
+    app_identifier: ENV["APP_IDENTIFIER"],
+    submit_for_review: true,
+    run_precheck_before_submit: false,
+    skip_binary_upload: false,
+    skip_screenshots: true,
+    skip_metadata: false,
+    automatic_release: true,
+    submission_information: {
+      export_compliance_uses_encryption: false,
+      add_id_info_uses_idfa: false
+    }
+  )
+end
 ```
 2. Replace: 
     - `user@email.com` with your `email` 
@@ -202,14 +155,10 @@ bundle exec fastlane firebase
     1. Sign in to [appleid.apple.com](appleid.apple.com).
     2. In the **Sign-In and Security** section, select **App-Specific Passwords**.
     3. Select **Generate an app-specific password** or select the Add button, then follow the steps on your screen.
-    4. Add following to the top of lane definition::
+    4. Replace `<APPLICATION_SPECIFIC_PASSWORD>` with `your application specific password`:
     ```
     ENV["FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD"] = "your-app-specific-password"
     ```
-3. As your CI machine will not be able to prompt you for your two-factor authentication or two-step verification information, you can generate a login session for your Apple ID in advance by running:
-```sh
-bundle exec fastlane spaceauth -u user@email.com
-```
 - Run folowing command to build and upload application to the AppstoreConnect for review:
 ```sh
 bundle exec fastlane release 
