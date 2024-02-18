@@ -120,38 +120,35 @@ bundle exec fastlane firebase
 ---
 ### For appstore distribution
 1. Add the following lane to Fastfile inside `platform :ios do` block:
-```ruby
-desc "Build and upload to AppstoreConnect"
-lane :release do
-  ENV["FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD"] = "<APPLICATION_SPECIFIC_PASSWORD>"
+    ```ruby
+    desc "Build and upload to AppstoreConnect"
+    lane :release do
+      ENV["FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD"] = "<APPLICATION_SPECIFIC_PASSWORD>"
 
-  build(
-    export_method: "app-store"
-  )
+      build(
+        export_method: "app-store"
+      )
 
-  upload_to_app_store(
-    username: ENV["FASTLANE_USER"],
-    team_name: "UNIT VIET NAM JOINT STOCK COMPANY",
-    force: true,
-    app_version: ENV["VERSION_NUMBER"],
-    app_identifier: ENV["APP_IDENTIFIER"],
-    submit_for_review: true,
-    run_precheck_before_submit: false,
-    skip_binary_upload: false,
-    skip_screenshots: true,
-    skip_metadata: false,
-    automatic_release: true,
-    submission_information: {
-      export_compliance_uses_encryption: false,
-      add_id_info_uses_idfa: false
-    }
-  )
-end
+      upload_to_app_store(
+        username: ENV["FASTLANE_USER"],
+        team_name: "UNIT VIET NAM JOINT STOCK COMPANY",
+        force: true,
+        app_version: ENV["VERSION_NUMBER"],
+        app_identifier: ENV["APP_IDENTIFIER"],
+        submit_for_review: true,
+        run_precheck_before_submit: false,
+        skip_binary_upload: false,
+        skip_screenshots: true,
+        skip_metadata: false,
+        automatic_release: true,
+        submission_information: {
+          export_compliance_uses_encryption: false,
+          add_id_info_uses_idfa: false
+        }
+      )
+    end
 ```
-2. Replace: 
-    - `user@email.com` with your `email` 
-    - `appstore_provisioning_profile` **with** provision profile that can be use to upload app binary to appstore
-3. Create APPLICATION_SPECIFIC_PASSWORD
+2. Create APPLICATION_SPECIFIC_PASSWORD
     1. Sign in to [appleid.apple.com](appleid.apple.com).
     2. In the **Sign-In and Security** section, select **App-Specific Passwords**.
     3. Select **Generate an app-specific password** or select the Add button, then follow the steps on your screen.
