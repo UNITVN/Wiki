@@ -53,12 +53,15 @@ import_from_git(
 
 # Replace following lines with your own values from project
 ENV["BUILD_NUMBER"] = "1"
-ENV["VERSION_NUMBER"] = "1.1.1"
-ENV["SCHEME_NAME"] = "snap-editor"
-ENV["APP_IDENTIFIER"] = "com.unitvn.photoeditor"
-ENV["FASTLANE_USER"] = "Quangtm193@gmail.com"
-ENV["ADHOC_PROVISIONING_PROFILE"] = "snap-edit-adhoc"
-ENV["APPSTORE_PROVISIONING_PROFILE"] = "snapeditor_appstore"
+ENV["VERSION_NUMBER"] = "1.3.7"
+ENV["SCHEME_NAME"] = "remove-background"
+ENV["APP_IDENTIFIER"] = "com.quangtran.removebg"
+ENV["FASTLANE_USER"] = "trmquang3103@gmail.com"
+ENV["FASTLANE_TEAM_NAME"] = "Quang Tran"
+ENV["ADHOC_PROVISIONING_PROFILE"] = "com.quangtran.adhoc"
+ENV["APPSTORE_PROVISIONING_PROFILE"] = "removebg_appstore"
+ENV["FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD"] = "flqr-ksdb-dymx-thka"
+
 ```
 ---
 ---
@@ -119,36 +122,8 @@ bundle exec fastlane firebase
 ```
 ---
 ### For appstore distribution
-1. Add the following lane to Fastfile inside `platform :ios do` block:
-    ```ruby
-    desc "Build and upload to AppstoreConnect"
-    lane :release do
-      ENV["FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD"] = "<APPLICATION_SPECIFIC_PASSWORD>"
 
-      build(
-        export_method: "app-store"
-      )
-
-      upload_to_app_store(
-        username: ENV["FASTLANE_USER"],
-        team_name: "UNIT VIET NAM JOINT STOCK COMPANY",
-        force: true,
-        app_version: ENV["VERSION_NUMBER"],
-        app_identifier: ENV["APP_IDENTIFIER"],
-        submit_for_review: true,
-        run_precheck_before_submit: false,
-        skip_binary_upload: false,
-        skip_screenshots: true,
-        skip_metadata: false,
-        automatic_release: true,
-        submission_information: {
-          export_compliance_uses_encryption: false,
-          add_id_info_uses_idfa: false
-        }
-      )
-    end
-```
-2. Create APPLICATION_SPECIFIC_PASSWORD
+1. Create APPLICATION_SPECIFIC_PASSWORD
     1. Sign in to [appleid.apple.com](appleid.apple.com).
     2. In the **Sign-In and Security** section, select **App-Specific Passwords**.
     3. Select **Generate an app-specific password** or select the Add button, then follow the steps on your screen.
@@ -156,7 +131,8 @@ bundle exec fastlane firebase
     ```
     ENV["FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD"] = "your-app-specific-password"
     ```
-- Run folowing command to build and upload application to the AppstoreConnect for review:
+2. Run folowing command to build and upload application to the AppstoreConnect for review:
 ```sh
 bundle exec fastlane release 
 ```
+3. If your login session wasn't cached, you might be ask to login to your Appstore connect account in order to call Appstore Connect API
