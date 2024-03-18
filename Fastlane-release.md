@@ -132,7 +132,20 @@ bundle exec fastlane firebase
     ENV["FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD"] = "your-app-specific-password"
     ```
 2. Run folowing command to build and upload application to the AppstoreConnect for review:
-```sh
-bundle exec fastlane release 
-```
-3. If your login session wasn't cached, you might be ask to login to your Appstore connect account in order to call Appstore Connect API
+    ```sh
+    bundle exec fastlane release 
+    ```
+
+### For Only upload build to appstore connect
+1. Create APPLICATION_SPECIFIC_PASSWORD
+    1. Sign in to [appleid.apple.com](appleid.apple.com).
+    2. In the **Sign-In and Security** section, select **App-Specific Passwords**.
+    3. Select **Generate an app-specific password** or select the Add button, then follow the steps on your screen.
+    4. Replace `<APPLICATION_SPECIFIC_PASSWORD>` with `your application specific password`:
+    ```
+    ENV["FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD"] = "your-app-specific-password"
+    ```
+2. Run folowing command to build and upload application to the AppstoreConnect for review:
+    ```sh
+    bundle exec fastlane upload_builds
+    ```
