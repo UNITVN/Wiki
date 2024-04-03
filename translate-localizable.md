@@ -26,7 +26,8 @@
 
     for o in project.objects do 
     if o.is_a? Xcodeproj::Project::Object::PBXGroup
-        if o.path == "Localized"
+        path = o.path
+        if path && path.end_with?("Localized")
             LocalizableGroup = o
             break
         end
